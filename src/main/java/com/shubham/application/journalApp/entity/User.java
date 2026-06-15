@@ -26,6 +26,10 @@ public class User {
     @NonNull
     private String password;
 
+    private String email;
+
+    private boolean sentimentAnalysis;
+
     @NonNull
     private List<String> roles;
 
@@ -54,6 +58,22 @@ public class User {
 
     public void setPassword(@NonNull String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isSentimentAnalysis() {
+        return sentimentAnalysis;
+    }
+
+    public void setSentimentAnalysis(boolean sentimentAnalysis) {
+        this.sentimentAnalysis = sentimentAnalysis;
     }
 
     public List<String> getRoles() {
