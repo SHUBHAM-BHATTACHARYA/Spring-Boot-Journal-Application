@@ -53,6 +53,22 @@ public class JournalEntryController {
         }
     }
 
+    //Register User can show their journal
+    @GetMapping("/getJournalByJournalId/{id}")
+    public ResponseEntity<?> getJournalByJournalId(@PathVariable ObjectId id){
+        try{
+            //Fetch the journal by Id
+            JournalEntry existingJournal = journalEntryService.getJournalEntryById(id).get();
+            if(existingJournal!=null){
+                    return new ResponseEntity<>(existingJournal, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Journal not exists", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     //Register User can add journal
     @PostMapping("/addJournal")
     public ResponseEntity<?> createJournal(@RequestBody JournalEntry journalEntry){

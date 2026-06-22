@@ -23,7 +23,9 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .cors(Customizer.withDefaults())
+                .authorizeRequests()
                 .antMatchers("/journalApplication/journal/**", "/journalApplication/user/**").authenticated()
                 .antMatchers("/journalApplication/admin/**").hasRole("admin")
                 .anyRequest().permitAll()

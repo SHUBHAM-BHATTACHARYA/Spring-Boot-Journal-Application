@@ -1,5 +1,7 @@
 package com.shubham.application.journalApp.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -17,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User {
     @Id
+    @JsonSerialize(using = ToStringSerializer.class) // Forces serialization to plain String
     private ObjectId id;
 
     @Indexed(unique = true)

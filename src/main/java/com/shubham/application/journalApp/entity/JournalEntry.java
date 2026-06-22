@@ -1,5 +1,7 @@
 package com.shubham.application.journalApp.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -14,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JournalEntry {
     @Id
+    @JsonSerialize(using = ToStringSerializer.class) // Forces serialization to plain String
     private ObjectId id;
     private String title;
     private String content;

@@ -18,6 +18,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/authenticateUser")
+    public ResponseEntity<?> validateUser(){
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     //User can update their password
     @PutMapping("/updateUser")
     public ResponseEntity<?> updateUser(@RequestBody User newUser){
