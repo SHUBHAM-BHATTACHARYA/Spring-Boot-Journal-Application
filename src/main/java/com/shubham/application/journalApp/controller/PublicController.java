@@ -32,12 +32,7 @@ public class PublicController {
         try{
             User existingUser = userService.getUserByUsername(username).get();
             if(existingUser!=null){
-                //username is unique
-                existingUser.setUsername(existingUser.getUsername());
-                //user can reset their password
                 existingUser.setPassword(newUser.getPassword());
-                //only admin can update the roles
-                existingUser.setRoles(existingUser.getRoles());
                 userService.updateUser(existingUser);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{

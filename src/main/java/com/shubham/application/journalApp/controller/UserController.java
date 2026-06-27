@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/journalApplication/user/")
 public class UserController {
@@ -23,6 +25,24 @@ public class UserController {
         try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //User can update their password
+    @GetMapping("/getUserRole")
+    public ResponseEntity<?> getUserRole(){
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User existingUser = userService.getUserByUsername(username).get();
+            if(existingUser!=null){
+                List<String> roles = existingUser.getRoles();
+                return new ResponseEntity<>(roles, HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
