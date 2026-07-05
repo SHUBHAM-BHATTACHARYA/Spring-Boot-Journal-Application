@@ -1,0 +1,32 @@
+# --- Build Outputs & Dependency Managers ---
+target/
+build/
+out/
+.gradle/
+/bin/
+
+# --- IDE Settings ---
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+
+# VS Code
+.vscode/
+
+# --- Secrets, Configurations & Logs ---
+*.log
+logs/
+
+# --- OS System Files ---
+.DS_Store
+Thumbs.db
+Desktop.ini
