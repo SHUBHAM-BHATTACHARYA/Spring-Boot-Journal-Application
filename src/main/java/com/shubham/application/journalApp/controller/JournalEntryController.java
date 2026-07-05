@@ -82,12 +82,12 @@ public class JournalEntryController {
                 User user = userService.getUserByUsername(username).get();
                 user.getJournalEntries().add(savedJournalEntry);
                 userService.saveUser(user);
-                return new ResponseEntity<>(journalEntry, HttpStatus.CREATED);
+                return ResponseEntity.status(HttpStatus.CREATED).body("Journal Added Successfully");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add journal: " + e.getMessage());
         }
 
     }
@@ -109,7 +109,7 @@ public class JournalEntryController {
                     existingJournal.setContent(newJournalEntry.getContent());
                     existingJournal.setDate(LocalDateTime.now());
                     journalEntryService.updateEntry(existingJournal);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
+                    return new ResponseEntity<>("Journal updated successfully",HttpStatus.CREATED);
                 } else{
                     return new ResponseEntity<>(String.format("Journal not belong to the User - %s", username), HttpStatus.NOT_FOUND);
                 }
