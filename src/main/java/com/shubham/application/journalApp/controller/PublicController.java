@@ -5,7 +5,11 @@ import com.shubham.application.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/journalApplication/public/")
@@ -14,14 +18,24 @@ public class PublicController {
     @Autowired
     private UserService userService;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     //Anyone can Register's in the applications
     @PostMapping("/addUser")
     public ResponseEntity<?> createEntry(@RequestBody User user){
         try{
+            if (user.getUsername() == null || user.getPassword() == null) {
+                return new ResponseEntity<>("Username and Password are required", HttpStatus.BAD_REQUEST);
+            }
+
+            // Hash the password before saving for security
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+
             userService.saveNewUser(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            return new ResponseEntity<>("Successfully Registered", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error creating user: " + e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -30,16 +44,26 @@ public class PublicController {
     @PutMapping("/resetUserPassword/{username}")
     public ResponseEntity<?> updateUser(@RequestBody User newUser, @PathVariable String username){
         try{
-            User existingUser = userService.getUserByUsername(username).get();
-            if(existingUser!=null){
-                existingUser.setPassword(newUser.getPassword());
+            Optional<User> existingUserOpt = userService.getUserByUsername(username);
+
+            if(existingUserOpt.isPresent()){
+                User existingUser = existingUserOpt.get();
+
+                if(newUser.getPassword() == null || newUser.getPassword().isEmpty()){
+                    return new ResponseEntity<>("Password is required", HttpStatus.BAD_REQUEST);
+                }
+
+                // Hash the updated password
+                String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+                existingUser.setPassword(encodedPassword);
+
                 userService.updateUser(existingUser);
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                return new ResponseEntity<>("Password updated successfully", HttpStatus.CREATED);
             }else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error updating password: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

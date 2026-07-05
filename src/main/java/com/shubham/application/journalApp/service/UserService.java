@@ -17,8 +17,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     //GET All users
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -31,7 +29,6 @@ public class UserService {
 
     //POST Requests for new user
     public User saveNewUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -42,7 +39,6 @@ public class UserService {
 
     //PUT Requests
     public User updateUser(User user){
-        user.setPassword(passwordEncoder.encode((user.getPassword())));
         return userRepository.save(user);
     }
 
